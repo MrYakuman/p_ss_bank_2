@@ -15,7 +15,7 @@ import java.math.BigInteger;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class HistoryServiceImpl implements HistoryService{
+public class HistoryServiceImpl implements HistoryService {
     private final HistoryRepository historyRepository;
 
     @Override
@@ -25,7 +25,7 @@ public class HistoryServiceImpl implements HistoryService{
                     log.error("History with id = " + id + " is not found!");
                     return new HistoryNotFoundException("History with id = " + id + " is not found!");
                 });
-        log.info("history with id= "+ id + "found in database");
+        log.info("history with id= " + id + "found in database");
         return HistoryMapper.INSTANCE.toDTO(history);
     }
 }

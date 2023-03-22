@@ -18,19 +18,16 @@ public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
-    @Column (name = "transfer_audit_id")
+    @Column(name = "transfer_audit_id")
     private BigInteger transferAuditId;
-    @Column (name = "profile_audit_id")
+    @Column(name = "profile_audit_id")
     private BigInteger profileAuditId;
-    @Column( name = "account_audit_id")
+    @Column(name = "account_audit_id")
     private BigInteger accountAuditId;
-    @Column (name = "anti_fraud_audit_id")
+    @Column(name = "anti_fraud_audit_id")
     private BigInteger antifraudAuditId;
-    @Column (name = "public_bank_info_audit_id")
+    @Column(name = "public_bank_info_audit_id")
     private BigInteger bankInfoAuditId;
-    @Column (name = "authorization_audit_id")
+    @Column(name = "authorization_audit_id")
     private BigInteger authAuditId;
-
-
-
 }

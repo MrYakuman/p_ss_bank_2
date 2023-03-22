@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper
 public interface HistoryMapper {
     HistoryMapper INSTANCE = Mappers.getMapper(HistoryMapper.class);
+
     HistoryDTO toDTO(History history);
-
-
 }

@@ -4,8 +4,8 @@ import com.bank.history.Entity.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigInteger;
-import java.util.Optional;
 
-public interface HistoryRepository extends JpaRepository <History, BigInteger> {
+
+public interface HistoryRepository extends JpaRepository<History, BigInteger> {
 
 }
