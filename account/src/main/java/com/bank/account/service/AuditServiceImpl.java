@@ -20,53 +20,43 @@ import static com.bank.account.mapper.AutoEntityMapper.MAPPER;
 public class AuditServiceImpl implements AuditService{
     private final AuditRepository auditRepository;
     @Override
-    @Transactional
-    public List<AuditDto> getAllAudit() {
-        return auditRepository.findAll().stream()
-                .map((auditInfo) -> MAPPER.mapToAuditDto(auditInfo))
-                .collect(Collectors.toList());
+    @Transactional (readOnly = true)
+    public List<Audit> getAllAudit() {
+        return auditRepository.findAll();
     }
 
     @Override
     @Transactional
-    public AuditDto saveAudit(AuditDto auditDto) {
-        var audit = MAPPER.mapToAudit(auditDto);
-        var savedAudit = auditRepository.save(audit);
-        return MAPPER.mapToAuditDto(savedAudit);
+    public Audit saveAudit(Audit audit) {
+        return auditRepository.save(audit);
     }
 
     @Override
-    @Transactional
-    public AuditDto getAuditById(long id) {
-        var audit = auditRepository.findById(id);
-        return audit.isPresent() ? MAPPER.mapToAuditDto(audit.get()): null;
+    @Transactional (readOnly = true)
+    public Optional <Audit> getAuditById(long id) {
+        return auditRepository.findById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional (readOnly = true)
     public void deleteAudit(long id) {
-        var deleteAudit = auditRepository.findById(id);
-        if (deleteAudit.isPresent()) {
+       auditRepository.findById(id).orElseThrow(() -> new NoSuchInfoException("Audit not found!"));
             auditRepository.deleteById(id);
-        } else {
-            throw new NoSuchInfoException("Audit not found!");
-        }
-
     }
 
     @Override
     @Transactional
-    public AuditDto updateAudit(AuditDto auditDto, Long id) {
-        Audit auditToUpdate = auditRepository.getById(auditDto.getId());
-        auditToUpdate.setId(auditDto.getId());
-        auditToUpdate.setEntity_type(auditDto.getEntity_type());
-        auditToUpdate.setOperation_type(auditDto.getOperation_type());
-        auditToUpdate.setCreated_by(auditDto.getCreated_by());
-        auditToUpdate.setModified_by(auditDto.getModified_by());
-        auditToUpdate.setCreated_by(auditDto.getCreated_by());
-        auditToUpdate.setModified_by(auditDto.getModified_by());
-        auditToUpdate.setNew_entity_json(auditDto.getNew_entity_json());
-        auditToUpdate.setEntity_json(auditDto.getEntity_json());
-        return MAPPER.mapToAuditDto(auditToUpdate);
+    public Audit updateAudit(Audit audit) {
+        Audit auditToUpdate = auditRepository.getById(audit.getId());
+        auditToUpdate.setId(audit.getId());
+        auditToUpdate.setEntity_type(audit.getEntity_type());
+        auditToUpdate.setOperation_type(audit.getOperation_type());
+        auditToUpdate.setCreated_by(audit.getCreated_by());
+        auditToUpdate.setModified_by(audit.getModified_by());
+        auditToUpdate.setCreated_by(audit.getCreated_by());
+        auditToUpdate.setModified_by(audit.getModified_by());
+        auditToUpdate.setNew_entity_json(audit.getNew_entity_json());
+        auditToUpdate.setEntity_json(audit.getEntity_json());
+        return auditToUpdate;
     }
 }

@@ -2,6 +2,7 @@ package com.bank.account.controller;
 
 import com.bank.account.dto.AuditDto;
 import com.bank.account.exception.NoSuchInfoException;
+import com.bank.account.mapper.AutoEntityMapper;
 import com.bank.account.service.AuditService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.bank.account.mapper.AutoEntityMapper.MAPPER;
 
 @RestController
 @RequestMapping("/audit")
@@ -18,25 +22,26 @@ public class RESTAuditController {
 
     @GetMapping
     public ResponseEntity<List<AuditDto>> getAllAudit() {
-        return new ResponseEntity<>(auditService.getAllAudit(), HttpStatus.OK);
+        var audits = auditService.getAllAudit().stream().map(MAPPER::mapToAuditDto).collect(Collectors.toList());
+        return new ResponseEntity<>(audits, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuditDto> getAudit(@PathVariable("id") long id) {
-        if (auditService.getAuditById(id) == null) {
-            throw new NoSuchInfoException("Audit not found!");
-        }
-        return new ResponseEntity<>(auditService.getAuditById(id), HttpStatus.OK);
+        var audit = auditService.getAuditById(id).orElseThrow(() -> new NoSuchInfoException("Audit not found!"));
+        return new ResponseEntity<>(MAPPER.mapToAuditDto(audit), HttpStatus.OK);
     }
 
     @PostMapping("/save")
     public ResponseEntity<AuditDto> saveAudit(@RequestBody AuditDto auditDto) {
-        return new ResponseEntity<>(auditService.saveAudit(auditDto), HttpStatus.CREATED);
+        var savedAudit  = auditService.saveAudit(MAPPER.mapToAudit(auditDto));
+        return new ResponseEntity<>(MAPPER.mapToAuditDto(savedAudit), HttpStatus.CREATED);
     }
 
     @PatchMapping("/update")
     public ResponseEntity<AuditDto> updateAudit(@RequestBody AuditDto auditDto) {
-        return new ResponseEntity<>(auditService.updateAudit(auditDto, auditDto.getId()), HttpStatus.OK);
+        var updatedAudit  = auditService.updateAudit(MAPPER.mapToAudit(auditDto));
+        return new ResponseEntity<>(MAPPER.mapToAuditDto(updatedAudit), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

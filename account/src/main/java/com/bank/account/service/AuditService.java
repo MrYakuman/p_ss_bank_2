@@ -2,17 +2,19 @@ package com.bank.account.service;
 
 import com.bank.account.dto.AccountDetailsDto;
 import com.bank.account.dto.AuditDto;
+import com.bank.account.entity.audit.Audit;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuditService {
-    List<AuditDto> getAllAudit();
+    List<Audit> getAllAudit();
 
-    AuditDto saveAudit(AuditDto auditDto);
+    Audit saveAudit(Audit audit);
 
-    AuditDto getAuditById(long id);
+    Optional <Audit> getAuditById(long id);
 
     void deleteAudit(long id);
 
-    AuditDto updateAudit(AuditDto auditDto, Long id);
+    Audit updateAudit(Audit audit);
 }

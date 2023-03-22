@@ -4,15 +4,16 @@ import com.bank.account.dto.AccountDetailsDto;
 import com.bank.account.entity.AccountDetails;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountDetailsService {
-    List<AccountDetailsDto> getAllAccounts();
+    List<AccountDetails> getAllAccounts();
 
-    AccountDetailsDto saveAccount(AccountDetailsDto accountDto);
+    AccountDetails saveAccount(AccountDetails account);
 
-    AccountDetailsDto getAccountById(long id);
+    Optional<AccountDetails> getAccountById(long id);
 
     void deleteAccount(long id);
 
-    AccountDetailsDto updateAccount(AccountDetailsDto account, Long id);
+    AccountDetails updateAccount(AccountDetails account);
 }

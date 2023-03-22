@@ -50,6 +50,19 @@ public class AccountDetails {
         }
     }
 
+    @Override
+    public String toString() {
+        return "{ " +
+                "id: " + id +
+                ", passport_id: " + passport_id +
+                ", account_number: " + account_number +
+                ", bank_details_id: " + bank_details_id +
+                ", money: " + money +
+                ", negative_balance: " + negative_balance +
+                ", profile_id: " + profile_id +
+                " }";
+    }
+
     public double getMoney() {
         return Math.round(money * 100.00) / 100.00;
     }
