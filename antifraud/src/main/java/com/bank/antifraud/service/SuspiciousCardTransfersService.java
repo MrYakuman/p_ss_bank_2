@@ -4,6 +4,7 @@ package com.bank.antifraud.service;
 import com.bank.antifraud.entity.SuspiciousCardTransfers;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SuspiciousCardTransfersService {
     void addSuspiciousCardTransfers(SuspiciousCardTransfers suspiciousCardTransfers);

@@ -1,6 +1,8 @@
 package com.bank.antifraud.controller;
 
 import com.bank.antifraud.dto.SuspiciousPhoneTransfersDTO;
+import com.bank.antifraud.exception.NoSuchSuspiciousAccountTransfersException;
+import com.bank.antifraud.exception.NoSuchSuspiciousPhoneTransfersException;
 import com.bank.antifraud.mapper.SuspiciousPhoneTransfersMapper;
 import com.bank.antifraud.service.SuspiciousPhoneTransfersService;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,9 @@ public class SuspiciousPhoneTransfersController {
         SuspiciousPhoneTransfersDTO suspiciousPhoneTransfersDTO = SuspiciousPhoneTransfersMapper
                 .MAPPER
                 .toSuspiciousPhoneTransfersDTO(suspiciousPhoneTransfersService.findSuspiciousPhoneTransfersById(id));
+        if (suspiciousPhoneTransfersDTO == null) {
+            throw new NoSuchSuspiciousPhoneTransfersException("There is no suspiciousPhoneTransfers with ID = " + id + " int Database");
+        }
 
         return new ResponseEntity<>(suspiciousPhoneTransfersDTO, HttpStatus.OK);
     }

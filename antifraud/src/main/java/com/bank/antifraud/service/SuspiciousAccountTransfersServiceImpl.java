@@ -3,13 +3,14 @@ package com.bank.antifraud.service;
 import com.bank.antifraud.entity.SuspiciousAccountTransfers;
 import com.bank.antifraud.repository.SuspiciousAccountTransfersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class SuspiciousAccountTransfersServiceImpl implements SuspiciousAccountTransfersService {
     private final SuspiciousAccountTransfersRepository suspiciousAccountTransfersRepository;
 
@@ -19,16 +20,19 @@ public class SuspiciousAccountTransfersServiceImpl implements SuspiciousAccountT
     }
 
     @Override
+    @Transactional
     public void addSuspiciousAccountTransfers(SuspiciousAccountTransfers suspiciousAccountTransfers) {
         suspiciousAccountTransfersRepository.save(suspiciousAccountTransfers);
     }
 
     @Override
+    @Transactional
     public void updateSuspiciousAccountTransfers(Long id, SuspiciousAccountTransfers suspiciousAccountTransfers) {
         suspiciousAccountTransfersRepository.saveAndFlush(suspiciousAccountTransfers);
     }
 
     @Override
+    @Transactional
     public void removeSuspiciousAccountTransfersById(long id) {
         suspiciousAccountTransfersRepository.deleteById(id);
     }

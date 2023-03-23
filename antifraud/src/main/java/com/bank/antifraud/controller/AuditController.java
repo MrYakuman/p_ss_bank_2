@@ -1,6 +1,7 @@
 package com.bank.antifraud.controller;
 
 import com.bank.antifraud.dto.AuditDTO;
+import com.bank.antifraud.exception.NoSuchAuditException;
 import com.bank.antifraud.mapper.AuditMapper;
 import com.bank.antifraud.service.AuditService;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,9 @@ public class AuditController {
         AuditDTO auditDTO = AuditMapper
                 .MAPPER
                 .toAuditDTO(auditService.findAuditById(id));
+        if (auditDTO == null) {
+            throw new NoSuchAuditException("There is no audit with ID = " + id + " int Database");
+        }
 
         return new ResponseEntity<>(auditDTO, HttpStatus.OK);
     }

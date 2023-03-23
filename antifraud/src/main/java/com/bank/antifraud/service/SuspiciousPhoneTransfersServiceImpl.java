@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class SuspiciousPhoneTransfersServiceImpl implements SuspiciousPhoneTransfersService {
     private final SuspiciousPhoneTransfersRepository suspiciousPhoneTransfersRepository;
 
@@ -19,16 +21,19 @@ public class SuspiciousPhoneTransfersServiceImpl implements SuspiciousPhoneTrans
     }
 
     @Override
+    @Transactional
     public void addSuspiciousPhoneTransfers(SuspiciousPhoneTransfers suspiciousPhoneTransfers) {
         suspiciousPhoneTransfersRepository.save(suspiciousPhoneTransfers);
     }
 
     @Override
+    @Transactional
     public void updateSuspiciousPhoneTransfers(Long id, SuspiciousPhoneTransfers suspiciousPhoneTransfers) {
         suspiciousPhoneTransfersRepository.saveAndFlush(suspiciousPhoneTransfers);
     }
 
     @Override
+    @Transactional
     public void removeSuspiciousPhoneTransfersById(long id) {
         suspiciousPhoneTransfersRepository.deleteById(id);
     }
