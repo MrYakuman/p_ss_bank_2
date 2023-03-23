@@ -5,6 +5,7 @@ import com.bank.antifraud.repository.AuditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,7 +14,6 @@ public class AuditServiceImpl implements AuditService {
     private final AuditRepository auditRepository;
 
     @Autowired
-    @Lazy
     public AuditServiceImpl(AuditRepository auditRepository) {
         this.auditRepository = auditRepository;
     }
