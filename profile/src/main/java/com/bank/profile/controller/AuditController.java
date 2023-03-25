@@ -1,6 +1,7 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.AuditDTO;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.AuditMapper;
 import com.bank.profile.service.serviceInterface.AuditService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,8 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +41,7 @@ public class AuditController {
                 .map(AuditMapper.INSTANCE::toAuditDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allAuditDTO, HttpStatus.OK);
+        return new ResponseEntity<>(allAuditDTO, HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
@@ -51,7 +54,7 @@ public class AuditController {
                 .INSTANCE
                 .toAuditDTO(auditService.findAuditById(id));
 
-        return new ResponseEntity<>(auditDTO, HttpStatus.OK);
+        return new ResponseEntity<>(auditDTO, HttpStatus.FOUND);
     }
 
     @PostMapping("/")
@@ -59,12 +62,16 @@ public class AuditController {
             summary = "Сохранение в бд нового объекта Audit.",
             description = "Сохранение в бд нового объекта Audit."
     )
-    public ResponseEntity<AuditDTO> createAudit(@RequestBody AuditDTO auditDTO) {
+    public ResponseEntity<AuditDTO> createAudit(@RequestBody @Valid AuditDTO auditDTO,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
 
         auditService.saveAudit(
                 AuditMapper.INSTANCE.toAudit(auditDTO));
 
-        return new ResponseEntity<>(auditDTO, HttpStatus.OK);
+        return new ResponseEntity<>(auditDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -73,11 +80,16 @@ public class AuditController {
             description = "Обновление существующего объекта Audit."
     )
     public ResponseEntity<AuditDTO> editAudit(@PathVariable Long id,
-                                              @RequestBody AuditDTO auditDTO) {
+                                              @RequestBody @Valid AuditDTO auditDTO,
+                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
+
         auditService.editAudit(id,
                 AuditMapper.INSTANCE.toAudit(auditDTO));
 
-        return new ResponseEntity<>(auditDTO, HttpStatus.OK);
+        return new ResponseEntity<>(auditDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

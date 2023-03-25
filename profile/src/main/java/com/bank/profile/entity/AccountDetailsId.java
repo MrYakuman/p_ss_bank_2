@@ -1,14 +1,18 @@
 package com.bank.profile.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 
 @Entity(name = "account_details_id")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Schema(name = "AccountDetailsId", description = "Маппинг профиля клиента со всеми его счетами.")
 public class AccountDetailsId {
     @Id

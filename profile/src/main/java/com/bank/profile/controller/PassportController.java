@@ -1,6 +1,7 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.PassportDTO;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.PassportMapper;
 import com.bank.profile.service.serviceInterface.PassportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,8 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +41,7 @@ public class PassportController {
                 .map(PassportMapper.INSTANCE::toPassportDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allPassportDTO, HttpStatus.OK);
+        return new ResponseEntity<>(allPassportDTO, HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
@@ -51,7 +54,7 @@ public class PassportController {
                 .INSTANCE
                 .toPassportDTO(passportService.findPassportById(id));
 
-        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
+        return new ResponseEntity<>(passportDTO, HttpStatus.FOUND);
     }
 
     @PostMapping("/")
@@ -59,12 +62,17 @@ public class PassportController {
             summary = "Сохранение в бд нового объекта Passport.",
             description = "Сохранение в бд нового объекта Passport."
     )
-    public ResponseEntity<PassportDTO> createPassport(@RequestBody PassportDTO passportDTO) {
+    public ResponseEntity<PassportDTO> createPassport(@RequestBody @Valid PassportDTO passportDTO,
+                                                      BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
 
         passportService.savePassport(
                 PassportMapper.INSTANCE.toPassport(passportDTO));
 
-        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
+        return new ResponseEntity<>(passportDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -73,11 +81,16 @@ public class PassportController {
             description = "Обновление существующего объекта Passport."
     )
     public ResponseEntity<PassportDTO> editPassport(@PathVariable Long id,
-                                                    @RequestBody PassportDTO passportDTO) {
+                                                    @RequestBody @Valid PassportDTO passportDTO,
+                                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
+
         passportService.editPassport(id,
                 PassportMapper.INSTANCE.toPassport(passportDTO));
 
-        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
+        return new ResponseEntity<>(passportDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

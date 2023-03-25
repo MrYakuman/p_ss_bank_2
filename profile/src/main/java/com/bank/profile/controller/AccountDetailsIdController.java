@@ -1,16 +1,19 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.AccountDetailsIdDTO;
-import com.bank.profile.entity.AccountDetailsId;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.AccountDetailsIdMapper;
 import com.bank.profile.service.serviceInterface.AccountDetailsIdService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import liquibase.pro.packaged.V;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +42,7 @@ public class AccountDetailsIdController {
                 .map(AccountDetailsIdMapper.INSTANCE::toAccountDetailsIdDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allAccountDetailsIdDTO, HttpStatus.OK);
+        return new ResponseEntity<>(allAccountDetailsIdDTO, HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
@@ -52,7 +55,7 @@ public class AccountDetailsIdController {
                 .INSTANCE
                 .toAccountDetailsIdDTO(accountDetailsIdService.findAccountDetailsIdById(id));
 
-        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.OK);
+        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.FOUND);
     }
 
     @PostMapping("/")
@@ -60,12 +63,16 @@ public class AccountDetailsIdController {
             summary = "Сохранение в бд нового объекта AccountDetailsId.",
             description = "Сохранение в бд нового объекта AccountDetailsId."
     )
-    public ResponseEntity<AccountDetailsIdDTO> createAccountDetailsId(@RequestBody AccountDetailsIdDTO accountDetailsIdDTO) {
+    public ResponseEntity<AccountDetailsIdDTO> createAccountDetailsId(@RequestBody @Valid AccountDetailsIdDTO accountDetailsIdDTO,
+                                                                      BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
 
         accountDetailsIdService.saveAccountDetailsId(
                 AccountDetailsIdMapper.INSTANCE.toAccountDetailsId(accountDetailsIdDTO));
 
-        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.OK);
+        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -74,11 +81,16 @@ public class AccountDetailsIdController {
             description = "Обновление существующего объекта AccountDetailsId."
     )
     public ResponseEntity<AccountDetailsIdDTO> editAccountDetailsId(@PathVariable Long id,
-                                                                    @RequestBody AccountDetailsIdDTO accountDetailsIdDTO) {
+                                                                    @RequestBody @Valid AccountDetailsIdDTO accountDetailsIdDTO,
+                                                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
+
         accountDetailsIdService.editAccountDetailsId(id,
                 AccountDetailsIdMapper.INSTANCE.toAccountDetailsId(accountDetailsIdDTO));
 
-        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.OK);
+        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

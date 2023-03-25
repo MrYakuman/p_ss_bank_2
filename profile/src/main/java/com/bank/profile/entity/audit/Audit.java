@@ -1,15 +1,18 @@
 package com.bank.profile.entity.audit;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity(name = "audit")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Schema(name = "Audit", description = "Сущность, объекты которой сохраняют в бд все CRUD операции с основными сущностями. Наследуется от абстрактного класса Auditable.")
 public class Audit extends Auditable<String> implements Serializable {
     @Id

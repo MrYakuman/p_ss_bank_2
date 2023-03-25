@@ -1,6 +1,7 @@
 package com.bank.profile.service.serviceInterface;
 
 import com.bank.profile.entity.ActualRegistration;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 

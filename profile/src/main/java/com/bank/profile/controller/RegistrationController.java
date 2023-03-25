@@ -1,19 +1,24 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.RegistrationDTO;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.RegistrationMapper;
 import com.bank.profile.service.serviceInterface.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 @RequestMapping("/registrations")
 @Tag(name = "RegistrationController", description = "REST контролер для сущности Registration (адрес регистрации по паспорту).")
 public class RegistrationController {
@@ -38,7 +43,7 @@ public class RegistrationController {
                 .map(RegistrationMapper.INSTANCE::toRegistrationDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allRegistrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(allRegistrationDTO, HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
@@ -51,7 +56,7 @@ public class RegistrationController {
                 .INSTANCE
                 .toRegistrationDTO(registrationService.findRegistrationById(id));
 
-        return new ResponseEntity<>(registrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(registrationDTO, HttpStatus.FOUND);
     }
 
     @PostMapping("/")
@@ -59,12 +64,16 @@ public class RegistrationController {
             summary = "Сохранение в бд нового объекта Registration.",
             description = "Сохранение в бд нового объекта Registration."
     )
-    public ResponseEntity<RegistrationDTO> createRegistration(@RequestBody RegistrationDTO registrationDTO) {
+    public ResponseEntity<RegistrationDTO> createRegistration(@RequestBody @Valid RegistrationDTO registrationDTO,
+                                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
 
         registrationService.saveRegistration(
                 RegistrationMapper.INSTANCE.toRegistration(registrationDTO));
 
-        return new ResponseEntity<>(registrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(registrationDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -73,11 +82,16 @@ public class RegistrationController {
             description = "Обновление существующего объекта Registration."
     )
     public ResponseEntity<RegistrationDTO> editRegistration(@PathVariable Long id,
-                                                            @RequestBody RegistrationDTO registrationDTO) {
+                                                            @RequestBody @Valid RegistrationDTO registrationDTO,
+                                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
+
         registrationService.editRegistration(id,
                 RegistrationMapper.INSTANCE.toRegistration(registrationDTO));
 
-        return new ResponseEntity<>(registrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(registrationDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

@@ -1,24 +1,31 @@
 package com.bank.profile.controller;
 
 import com.bank.profile.dto.ActualRegistrationDTO;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.ActualRegistrationMapper;
 import com.bank.profile.service.serviceInterface.ActualRegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 @RequestMapping("/actual_registrations")
 @Tag(name = "ActualRegistration", description = "REST контролер для сущности ActualRegistration (адрес фактического проживания).")
 public class ActualRegistrationController {
 
     private final ActualRegistrationService actualRegistrationService;
 
+    @Autowired
     public ActualRegistrationController(ActualRegistrationService actualRegistrationService) {
         this.actualRegistrationService = actualRegistrationService;
     }
@@ -37,7 +44,7 @@ public class ActualRegistrationController {
                 .map(ActualRegistrationMapper.INSTANCE::toActualRegistrationDTO)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allActualRegistrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(allActualRegistrationDTO, HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
@@ -50,20 +57,26 @@ public class ActualRegistrationController {
                 .INSTANCE
                 .toActualRegistrationDTO(actualRegistrationService.findActualRegistrationById(id));
 
-        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.FOUND);
     }
+
 
     @PostMapping("/")
     @Operation(
             summary = "Сохранение в бд нового объекта ActualRegistration.",
             description = "Сохранение в бд нового объекта ActualRegistration."
     )
-    public ResponseEntity<ActualRegistrationDTO> createActualRegistration(@RequestBody ActualRegistrationDTO actualRegistrationDTO) {
+    public ResponseEntity<ActualRegistrationDTO> createActualRegistration(@RequestBody @Valid ActualRegistrationDTO actualRegistrationDTO,
+                                                                          BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
 
         actualRegistrationService.saveActualRegistration(
                 ActualRegistrationMapper.INSTANCE.toActualRegistration(actualRegistrationDTO));
 
-        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -72,11 +85,16 @@ public class ActualRegistrationController {
             description = "Обновление существующего объекта ActualRegistration."
     )
     public ResponseEntity<ActualRegistrationDTO> editActualRegistration(@PathVariable Long id,
-                                                                        @RequestBody ActualRegistrationDTO actualRegistrationDTO) {
+                                                                        @RequestBody @Valid ActualRegistrationDTO actualRegistrationDTO,
+                                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ArgumentNotValidException(bindingResult);
+        }
+
         actualRegistrationService.editActualRegistration(id,
                 ActualRegistrationMapper.INSTANCE.toActualRegistration(actualRegistrationDTO));
 
-        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

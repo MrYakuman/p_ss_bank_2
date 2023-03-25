@@ -1,13 +1,20 @@
 package com.bank.profile.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @Entity(name = "registration")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Schema(name = "Registration", description = "Данные о регистрации клиента.")
 public class Registration {
     @Id
@@ -16,7 +23,6 @@ public class Registration {
     long id;
     @Column(name = "country",
             length = 166)
-    @NotBlank
     String country;
     @Column(name = "region",
             length = 160)
@@ -43,6 +49,5 @@ public class Registration {
             length = 40)
     String flatNumber;
     @Column(name = "index")
-    @NotBlank
     int index;
 }

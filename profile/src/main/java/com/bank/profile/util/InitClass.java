@@ -35,14 +35,14 @@ public class InitClass {
         registration.setStreet("Пирогова");
         registration.setHouseNumber("42");
         registration.setFlatNumber("14");
-        registration.setIndex(142536);
+        registration.setIndex(1426536);
 
 
         Passport passport = new Passport();
 
-        LocalDate birthDate = LocalDate.of(1994,10,13);
-        LocalDate dateOfIssue = LocalDate.of(2011,11,05);
-        LocalDate expirationDate = LocalDate.of(2032,10,13);
+        LocalDate birthDate = LocalDate.of(1994, 10, 13);
+        LocalDate dateOfIssue = LocalDate.of(2011, 11, 5);
+        LocalDate expirationDate = LocalDate.of(2032, 10, 13);
 
         passport.setSeries(2415);
         passport.setNumber(241536);
@@ -57,7 +57,6 @@ public class InitClass {
         passport.setDivisionCode(365214);
         passport.setExpirationDate(expirationDate);
         passport.setRegistrationId(registration);
-
 
 
         Profile profile = new Profile();
@@ -79,14 +78,14 @@ public class InitClass {
         registration2.setStreet("Меченова");
         registration2.setHouseNumber("4");
         registration2.setFlatNumber("15");
-        registration2.setIndex(143236);
+        registration2.setIndex(1435236);
 
 
         Passport passport2 = new Passport();
 
-        LocalDate birthDate2 = LocalDate.of(1995,11,13);
-        LocalDate dateOfIssue2 = LocalDate.of(2010,11,05);
-        LocalDate expirationDate2 = LocalDate.of(2031,10,13);
+        LocalDate birthDate2 = LocalDate.of(1995, 11, 13);
+        LocalDate dateOfIssue2 = LocalDate.of(2010, 11, 05);
+        LocalDate expirationDate2 = LocalDate.of(2031, 10, 13);
 
         passport2.setSeries(1425);
         passport2.setNumber(242567);
@@ -101,7 +100,6 @@ public class InitClass {
         passport2.setDivisionCode(425214);
         passport2.setExpirationDate(expirationDate2);
         passport2.setRegistrationId(registration2);
-
 
 
         Profile profile2 = new Profile();

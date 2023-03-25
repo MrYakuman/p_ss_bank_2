@@ -1,12 +1,18 @@
 package com.bank.profile.dto;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class RegistrationDTO {
+    @NotEmpty(message = "enter the country")
+    @Size(min = 3, message = "name of the country cannot be shorter than 3 characters")
     String country;
     String region;
     String city;
@@ -16,5 +22,9 @@ public class RegistrationDTO {
     String houseNumber;
     String houseBlock;
     String flatNumber;
-    int index;
+    //    @Max(value = 8, message = "index must contain 8 digits")
+
+    @Digits(integer = 8, fraction = 0, message = "index must contain 8 digits")
+            @Min(value = 8)
+    Integer index;
 }
