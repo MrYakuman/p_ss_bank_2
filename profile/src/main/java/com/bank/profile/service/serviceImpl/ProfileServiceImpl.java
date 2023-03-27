@@ -25,6 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
         log.info("attempt to save Profile");
         profileRepository.save(profile);
         log.info("saved Profile successfully: id = {}", profile.getId());
+
     }
 
     @Override

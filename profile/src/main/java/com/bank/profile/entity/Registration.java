@@ -2,12 +2,8 @@ package com.bank.profile.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 @Entity(name = "registration")
 @Getter

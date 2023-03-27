@@ -1,9 +1,9 @@
 package com.bank.profile.dto;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,12 +14,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class PassportDTO {
-    @Min(value = 4, message = "series must contain 4 digits")
-    @Max(value = 4, message = "series must contain 4 digits")
+
+    @Range(min = 1000, max = 9999, message = "series must contain 4 digits")
     int series;
 
-    @Min(value = 5, message = "number must contain 6 digits")
-    @Max(value = 6, message = "number must contain 6 digits")
+    @Range(min = 100000, max = 999999, message = "number must contain 6 digits")
     int number;
 
     @NotEmpty(message = "enter the last name")
@@ -27,6 +26,7 @@ public class PassportDTO {
 
     @NotEmpty(message = "enter the first name")
     String firstName;
+
     String middleName;
 
     @NotEmpty(message = "enter the gender")
@@ -44,11 +44,11 @@ public class PassportDTO {
     @NotNull(message = "enter the date of issue")
     LocalDate dateOfIssue;
 
-    @Min(value = 6, message = "division code must contain 6 digits")
-    @Max(value = 6, message = "division code must contain 6 digits")
+    @Range(min = 100000, max = 999999, message = "division code must contain 6 digits")
     int divisionCode;
     LocalDate expirationDate;
 
     @NotNull(message = "enter the registration")
+    @Valid
     RegistrationDTO registration;
 }

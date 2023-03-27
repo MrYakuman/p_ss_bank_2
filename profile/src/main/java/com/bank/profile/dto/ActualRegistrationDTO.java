@@ -1,9 +1,8 @@
 package com.bank.profile.dto;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -24,7 +23,7 @@ public class ActualRegistrationDTO {
     String houseNumber;
     String houseBlock;
     String flatNumber;
-    @Min(value = 8, message = "index must contain 8 digits")
-    @Max(value = 8, message = "index must contain 8 digits")
-    int index;
+
+    @Range(min = 100000, max = 999999, message = "index must contain 6 digits")
+    Integer index;
 }
