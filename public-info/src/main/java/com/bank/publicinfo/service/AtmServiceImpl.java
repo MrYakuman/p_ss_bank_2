@@ -33,12 +33,13 @@ public class AtmServiceImpl implements AtmService{
     }
 
     @Override
+    @Transactional
     public void deleteAtmById(long id) {
         atmRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Atm getAtmById(long id) {
         Optional<Atm> foundAtm =atmRepository.findById(id);
         return foundAtm.orElseThrow(() -> new AtmNotFoundException("There is no entity with this id"));

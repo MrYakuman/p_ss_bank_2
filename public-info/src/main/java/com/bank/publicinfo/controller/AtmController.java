@@ -42,7 +42,7 @@ public class AtmController {
      * Возвращает ответ клиенту в виде responseEntity
      * @return
      */
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<AtmDTO>> getAllAtm() {
         log.info("Пришел запрос на получение данных о всех банкоматах");
         return ResponseEntity.ok(atmService.getAllAtm().stream()
