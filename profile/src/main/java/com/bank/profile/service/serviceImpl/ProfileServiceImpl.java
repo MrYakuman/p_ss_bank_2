@@ -21,11 +21,11 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void saveProfile(Profile profile) {
+    public boolean saveProfile(Profile profile) {
         log.info("attempt to save Profile");
         profileRepository.save(profile);
         log.info("saved Profile successfully: id = {}", profile.getId());
-
+        return true;
     }
 
     @Override
@@ -39,15 +39,16 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void editProfile(Long id, Profile profile) {
+    public boolean editProfile(Long id, Profile profile) {
         log.info("attempt to update Profile: id = {}", id);
         profile.setId(id);
         profileRepository.save(profile);
         log.info("updated Profile successfully: id = {}", id);
+        return true;
     }
 
     @Override
-    public void deleteProfile(long profileId) {
+    public boolean deleteProfile(long profileId) {
         log.info("attempt to delete Profile: {}", profileId);
 
         try {
@@ -57,6 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         log.info("deleted Profile successfully: id = {}", profileId);
+        return true;
     }
 
     @Override

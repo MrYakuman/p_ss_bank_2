@@ -94,7 +94,7 @@ public class ActualRegistrationController {
         actualRegistrationService.editActualRegistration(id,
                 ActualRegistrationMapper.INSTANCE.toActualRegistration(actualRegistrationDTO));
 
-        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(actualRegistrationDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

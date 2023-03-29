@@ -59,23 +59,6 @@ public class RegistrationController {
         return new ResponseEntity<>(registrationDTO, HttpStatus.FOUND);
     }
 
-    @PostMapping("/")
-    @Operation(
-            summary = "Сохранение в бд нового объекта Registration.",
-            description = "Сохранение в бд нового объекта Registration."
-    )
-    public ResponseEntity<RegistrationDTO> createRegistration(@RequestBody @Valid RegistrationDTO registrationDTO,
-                                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ArgumentNotValidException(bindingResult);
-        }
-
-        registrationService.saveRegistration(
-                RegistrationMapper.INSTANCE.toRegistration(registrationDTO));
-
-        return new ResponseEntity<>(registrationDTO, HttpStatus.CREATED);
-    }
-
     @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Registration.",
@@ -91,16 +74,6 @@ public class RegistrationController {
         registrationService.editRegistration(id,
                 RegistrationMapper.INSTANCE.toRegistration(registrationDTO));
 
-        return new ResponseEntity<>(registrationDTO, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Удаление существующего объекта Registration.",
-            description = "Удаление существующего объекта Registration."
-    )
-    public ResponseEntity<HttpStatus> deleteRegistration(@PathVariable Long id) {
-        registrationService.deleteRegistration(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(registrationDTO, HttpStatus.OK);
     }
 }

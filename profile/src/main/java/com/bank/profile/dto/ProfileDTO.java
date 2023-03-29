@@ -32,5 +32,4 @@ public class ProfileDTO {
 
     @Valid
     ActualRegistrationDTO actualRegistration;
-
 }

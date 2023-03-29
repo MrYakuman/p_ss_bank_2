@@ -6,13 +6,9 @@ import java.util.List;
 
 
 public interface RegistrationService {
-    void saveRegistration(Registration registration);
-
     Registration findRegistrationById(long registrationId);
 
-    void editRegistration(Long id, Registration registration);
-
-    void deleteRegistration(long registrationId);
+    boolean editRegistration(Long id, Registration registration);
 
     List<Registration> getAllRegistration();
 }

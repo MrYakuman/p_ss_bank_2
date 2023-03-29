@@ -6,7 +6,6 @@ import com.bank.profile.mappers.AccountDetailsIdMapper;
 import com.bank.profile.service.serviceInterface.AccountDetailsIdService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import liquibase.pro.packaged.V;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +40,6 @@ public class AccountDetailsIdController {
                 .stream()
                 .map(AccountDetailsIdMapper.INSTANCE::toAccountDetailsIdDTO)
                 .collect(Collectors.toList());
-
         return new ResponseEntity<>(allAccountDetailsIdDTO, HttpStatus.FOUND);
     }
 
@@ -51,10 +49,8 @@ public class AccountDetailsIdController {
             description = "Получение конкретного объекта AccountDetailsId через accountDetailsId.id."
     )
     public ResponseEntity<AccountDetailsIdDTO> getAccountDetailsId(@PathVariable Long id) {
-        AccountDetailsIdDTO accountDetailsIdDTO = AccountDetailsIdMapper
-                .INSTANCE
+        AccountDetailsIdDTO accountDetailsIdDTO = AccountDetailsIdMapper.INSTANCE
                 .toAccountDetailsIdDTO(accountDetailsIdService.findAccountDetailsIdById(id));
-
         return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.FOUND);
     }
 
@@ -71,7 +67,6 @@ public class AccountDetailsIdController {
 
         accountDetailsIdService.saveAccountDetailsId(
                 AccountDetailsIdMapper.INSTANCE.toAccountDetailsId(accountDetailsIdDTO));
-
         return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.CREATED);
     }
 
@@ -86,11 +81,9 @@ public class AccountDetailsIdController {
         if (bindingResult.hasErrors()) {
             throw new ArgumentNotValidException(bindingResult);
         }
-
         accountDetailsIdService.editAccountDetailsId(id,
                 AccountDetailsIdMapper.INSTANCE.toAccountDetailsId(accountDetailsIdDTO));
-
-        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(accountDetailsIdDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

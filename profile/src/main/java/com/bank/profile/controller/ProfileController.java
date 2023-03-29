@@ -96,7 +96,7 @@ public class ProfileController {
 
         return new ResponseEntity<>(profileDTO, HttpStatus.CREATED);
     }
-    
+
     @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Profile.",

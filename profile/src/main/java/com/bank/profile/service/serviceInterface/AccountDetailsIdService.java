@@ -5,13 +5,13 @@ import com.bank.profile.entity.AccountDetailsId;
 import java.util.List;
 
 public interface AccountDetailsIdService {
-    void saveAccountDetailsId(AccountDetailsId accountDetailsId);
+    boolean saveAccountDetailsId(AccountDetailsId accountDetailsId);
 
     AccountDetailsId findAccountDetailsIdById(long accountDetailsIdId);
 
-    void editAccountDetailsId(Long id, AccountDetailsId accountDetailsId);
+    boolean editAccountDetailsId(Long id, AccountDetailsId accountDetailsId);
 
-    void deleteAccountDetailsId(long accountDetailsIdId);
+    boolean deleteAccountDetailsId(long accountDetailsIdId);
 
     List<AccountDetailsId> getAllAccountDetailsId();
 }

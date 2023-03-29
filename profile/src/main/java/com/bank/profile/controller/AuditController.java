@@ -74,31 +74,4 @@ public class AuditController {
         return new ResponseEntity<>(auditDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    @Operation(
-            summary = "Обновление существующего объекта Audit.",
-            description = "Обновление существующего объекта Audit."
-    )
-    public ResponseEntity<AuditDTO> editAudit(@PathVariable Long id,
-                                              @RequestBody @Valid AuditDTO auditDTO,
-                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ArgumentNotValidException(bindingResult);
-        }
-
-        auditService.editAudit(id,
-                AuditMapper.INSTANCE.toAudit(auditDTO));
-
-        return new ResponseEntity<>(auditDTO, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Удаление существующего объекта Audit.",
-            description = "Удаление существующего объекта Audit через audit.id."
-    )
-    public ResponseEntity<HttpStatus> deleteAudit(@PathVariable Long id) {
-        auditService.deleteAudit(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }

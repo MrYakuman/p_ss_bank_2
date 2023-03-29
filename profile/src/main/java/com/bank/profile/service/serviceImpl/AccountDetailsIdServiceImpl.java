@@ -1,7 +1,6 @@
 package com.bank.profile.service.serviceImpl;
 
 import com.bank.profile.entity.AccountDetailsId;
-import com.bank.profile.entity.Profile;
 import com.bank.profile.exception.EntityNotFoundException;
 import com.bank.profile.repository.AccountDetailsIdRepository;
 import com.bank.profile.service.serviceInterface.AccountDetailsIdService;
@@ -11,7 +10,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,10 +22,11 @@ public class AccountDetailsIdServiceImpl implements AccountDetailsIdService {
     }
 
     @Override
-    public void saveAccountDetailsId(AccountDetailsId accountDetailsId) {
+    public boolean saveAccountDetailsId(AccountDetailsId accountDetailsId) {
         log.info("attempt to save AccountDetailsId");
         accountDetailsIdRepository.save(accountDetailsId);
         log.info("saved AccountDetailsId successfully: id = {}", accountDetailsId.getId());
+        return true;
     }
 
     @Override
@@ -41,24 +40,25 @@ public class AccountDetailsIdServiceImpl implements AccountDetailsIdService {
     }
 
     @Override
-    public void editAccountDetailsId(Long id, AccountDetailsId accountDetailsId) {
+    public boolean editAccountDetailsId(Long id, AccountDetailsId accountDetailsId) {
         log.info("attempt to update AccountDetailsId: id = {}", id);
         accountDetailsId.setId(id);
         accountDetailsIdRepository.save(accountDetailsId);
         log.info("updated AccountDetailsId successfully: id = {}", id);
+        return true;
     }
 
     @Override
-    public void deleteAccountDetailsId(long accountDetailsIdId) {
+    public boolean deleteAccountDetailsId(long accountDetailsIdId) {
         log.info("attempt to delete AccountDetailsId: {}", accountDetailsIdId);
 
         try {
             accountDetailsIdRepository.deleteById(accountDetailsIdId);
+            log.info("deleted AccountDetailsId successfully: id = {}", accountDetailsIdId);
+            return true;
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(AccountDetailsId.class.getSimpleName(), accountDetailsIdId, e);
         }
-
-        log.info("deleted AccountDetailsId successfully: id = {}", accountDetailsIdId);
     }
 
     @Override

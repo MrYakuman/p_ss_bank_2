@@ -6,13 +6,13 @@ import java.util.List;
 
 
 public interface ProfileService {
-    void saveProfile(Profile profile);
+    boolean saveProfile(Profile profile);
 
     Profile findProfileById(long profileId);
 
-    void editProfile(Long id, Profile profile);
+    boolean editProfile(Long id, Profile profile);
 
-    void deleteProfile(long profileId);
+    boolean deleteProfile(long profileId);
 
     List<Profile> getAllProfile();
 

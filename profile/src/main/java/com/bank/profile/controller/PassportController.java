@@ -57,24 +57,6 @@ public class PassportController {
         return new ResponseEntity<>(passportDTO, HttpStatus.FOUND);
     }
 
-    @PostMapping("/")
-    @Operation(
-            summary = "Сохранение в бд нового объекта Passport.",
-            description = "Сохранение в бд нового объекта Passport."
-    )
-    public ResponseEntity<PassportDTO> createPassport(@RequestBody @Valid PassportDTO passportDTO,
-                                                      BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            throw new ArgumentNotValidException(bindingResult);
-        }
-
-        passportService.savePassport(
-                PassportMapper.INSTANCE.toPassport(passportDTO));
-
-        return new ResponseEntity<>(passportDTO, HttpStatus.CREATED);
-    }
-
     @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Passport.",
@@ -90,17 +72,6 @@ public class PassportController {
         passportService.editPassport(id,
                 PassportMapper.INSTANCE.toPassport(passportDTO));
 
-        return new ResponseEntity<>(passportDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(passportDTO, HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Удаление существующего объекта Passport.",
-            description = "Удаление существующего объекта Passport."
-    )
-    public ResponseEntity<HttpStatus> deleteRegistration(@PathVariable Long id) {
-        passportService.deletePassport(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
 }

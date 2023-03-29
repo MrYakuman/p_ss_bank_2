@@ -24,4 +24,6 @@ public class AuditDTO {
 
     @NotEmpty(message = "enter the entity json")
     String entityJson;
+
+
 }

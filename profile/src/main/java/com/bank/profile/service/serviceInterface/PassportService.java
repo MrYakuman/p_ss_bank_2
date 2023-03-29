@@ -5,13 +5,9 @@ import com.bank.profile.entity.Passport;
 import java.util.List;
 
 public interface PassportService {
-    void savePassport(Passport passport);
-
     Passport findPassportById(long passportId);
 
-    void editPassport(Long id, Passport passport);
-
-    void deletePassport(long passportId);
+    boolean editPassport(Long id, Passport passport);
 
     List<Passport> getAllPassport();
 }

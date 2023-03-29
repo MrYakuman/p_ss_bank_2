@@ -1,12 +1,12 @@
 package com.bank.profile.service.serviceImpl;
 
+import com.bank.profile.entity.ActualRegistration;
 import com.bank.profile.entity.audit.Audit;
 import com.bank.profile.exception.EntityNotFoundException;
 import com.bank.profile.repository.AuditRepository;
 import com.bank.profile.service.serviceInterface.AuditService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +22,11 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public void saveAudit(Audit audit) {
+    public boolean saveAudit(Audit audit) {
         log.info("attempt to save Audit");
         auditRepository.save(audit);
         log.info("saved Audit successfully: id = {}", audit.getId());
+        return true;
     }
 
     @Override
@@ -36,27 +37,6 @@ public class AuditServiceImpl implements AuditService {
         log.info("Audit found: id = {}", auditId);
 
         return audit;
-    }
-
-    @Override
-    public void editAudit(Long id, Audit audit) {
-        log.info("attempt to update Audit: id = {}", id);
-        audit.setId(id);
-        auditRepository.save(audit);
-        log.info("updated Audit successfully: id = {}", id);
-    }
-
-    @Override
-    public void deleteAudit(long auditId) {
-        log.info("attempt to delete Audit: {}", auditId);
-
-        try {
-            auditRepository.deleteById(auditId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(Audit.class.getSimpleName(), auditId, e);
-        }
-
-        log.info("deleted Audit successfully: id = {}", auditId);
     }
 
     @Override

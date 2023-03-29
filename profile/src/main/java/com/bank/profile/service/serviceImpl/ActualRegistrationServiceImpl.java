@@ -1,7 +1,6 @@
 package com.bank.profile.service.serviceImpl;
 
 import com.bank.profile.entity.ActualRegistration;
-import com.bank.profile.entity.Profile;
 import com.bank.profile.exception.EntityNotFoundException;
 import com.bank.profile.repository.ActualRegistrationRepository;
 import com.bank.profile.service.serviceInterface.ActualRegistrationService;
@@ -21,10 +20,11 @@ public class ActualRegistrationServiceImpl implements ActualRegistrationService 
     }
 
     @Override
-    public void saveActualRegistration(ActualRegistration actualRegistration) {
+    public boolean saveActualRegistration(ActualRegistration actualRegistration) {
         log.info("attempt to save ActualRegistration");
         actualRegistrationRepository.save(actualRegistration);
         log.info("saved ActualRegistration successfully: id = {}", actualRegistration.getId());
+        return true;
     }
 
     @Override
@@ -38,23 +38,24 @@ public class ActualRegistrationServiceImpl implements ActualRegistrationService 
     }
 
     @Override
-    public void editActualRegistration(Long id, ActualRegistration actualRegistration) {
+    public boolean editActualRegistration(Long id, ActualRegistration actualRegistration) {
         log.info("attempt to update ActualRegistration: id = {}", id);
         actualRegistration.setId(id);
         actualRegistrationRepository.save(actualRegistration);
         log.info("updated ActualRegistration successfully: id = {}", id);
+        return true;
     }
 
     @Override
-    public void deleteActualRegistration(long actualRegistrationId) {
+    public boolean deleteActualRegistration(long actualRegistrationId) {
         log.info("attempt to delete ActualRegistration: {}", actualRegistrationId);
         try {
             actualRegistrationRepository.deleteById(actualRegistrationId);
+            log.info("deleted ActualRegistration successfully: id = {}", actualRegistrationId);
+            return true;
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(ActualRegistration.class.getSimpleName(), actualRegistrationId, e);
         }
-
-        log.info("deleted ActualRegistration successfully: id = {}", actualRegistrationId);
     }
 
     @Override
