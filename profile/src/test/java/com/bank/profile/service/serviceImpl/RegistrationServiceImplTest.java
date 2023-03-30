@@ -4,7 +4,6 @@ import com.bank.profile.entity.Registration;
 import com.bank.profile.exception.EntityNotFoundException;
 import com.bank.profile.repository.RegistrationRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -35,39 +35,37 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void findRegistrationByIdShouldReturnRegistrationTest() {
+    void findRegistrationByIdShouldReturnRegistration() {
         doReturn(Optional.of(getRegistration())).when(registrationRepository).findById(anyLong());
 
         Registration registration = registrationServiceImpl.findRegistrationById(anyLong());
 
+        assertEquals(getRegistration(), registration);
         verify(registrationServiceImpl).findRegistrationById(anyLong());
-        Assertions.assertEquals(getRegistration(), registration);
         log.info("test findRegistrationByIdShouldReturnRegistration completed successfully");
     }
 
     @Test
-    void findRegistrationByIdShouldReturnErrorTest() {
-        doThrow(EntityNotFoundException.class).when(registrationRepository).findById(anyLong());
-
-        Assertions.assertThrows(EntityNotFoundException.class, () -> registrationServiceImpl.findRegistrationById(anyLong()));
+    void findRegistrationByIdShouldReturnError() {
+        assertThrows(EntityNotFoundException.class, () -> registrationServiceImpl.findRegistrationById(anyLong()));
 
         verify(registrationServiceImpl).findRegistrationById(anyLong());
         log.info("test findRegistrationByIdShouldReturnError completed successfully");
     }
 
     @Test
-    void editRegistrationShouldReturnUpdateRegistrationTest() {
+    void editRegistrationShouldReturnUpdateRegistration() {
         doReturn(getRegistration()).when(registrationRepository).save(any(Registration.class));
 
         boolean b = registrationServiceImpl.editRegistration(getRegistration().getId(), getRegistration());
 
-        Assertions.assertTrue(b);
+        assertTrue(b);
         verify(registrationServiceImpl).editRegistration(anyLong(), any(Registration.class));
         log.info("test editRegistrationShouldReturnUpdateRegistration completed successfully");
     }
 
     @Test
-    void getAllRegistrationShouldReturnListTest() {
+    void getAllRegistrationShouldReturnList() {
         List<Registration> registrations = new ArrayList<>();
         registrations.add(mock(Registration.class));
         registrations.add(mock(Registration.class));
@@ -76,8 +74,19 @@ class RegistrationServiceImplTest {
 
         List<Registration> registrationExtend = registrationServiceImpl.getAllRegistration();
 
-        Assertions.assertEquals(3, registrationExtend.size());
+        assertEquals(registrations.size(), registrationExtend.size());
         verify(registrationServiceImpl).getAllRegistration();
         log.info("test getAllRegistrationShouldReturnList completed successfully");
     }
+
+    @Test
+    void getAllRegistrationShouldReturnError() {
+        List<Registration> registrations = new ArrayList<>();
+        doReturn(registrations).when(registrationRepository).findAll();
+
+        assertThrows(EntityNotFoundException.class, () -> registrationServiceImpl.getAllRegistration());
+        verify(registrationServiceImpl).getAllRegistration();
+        log.info("test getAllRegistrationShouldReturnError completed successfully");
+    }
+
 }

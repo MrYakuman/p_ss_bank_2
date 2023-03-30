@@ -2,9 +2,9 @@ package com.bank.profile.controller;
 
 import com.bank.profile.dto.AuditDTO;
 import com.bank.profile.entity.audit.Audit;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.service.serviceInterface.AuditService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -52,28 +53,37 @@ class AuditControllerTest {
 
         ResponseEntity<List<AuditDTO>> response = controller.getAllAudit();
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getAllAuditShouldReturnHttpStatusAndList completed successfully");
     }
 
     @Test
-    void getAuditShouldReturnHttpStatusAndAuditDTO_Test() {
+    void getAuditShouldReturnHttpStatusAndAuditDTO() {
         doReturn(getEntity()).when(service).findAuditById(anyLong());
 
         ResponseEntity<AuditDTO> response = controller.getAudit(anyLong());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getRegistrationShouldReturnHttpStatusAndRegistrationDTO completed successfully");
     }
 
     @Test
-    void createAuditShouldReturnHttpStatusAndAuditDTO_Test() {
+    void createAuditShouldReturnHttpStatusAndAuditDTO() {
         ResponseEntity<AuditDTO> response = controller.createAudit(getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         log.info("test createAuditShouldReturnHttpStatusAndAuditDTO completed successfully");
+    }
+
+    @Test
+    void createAuditShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.createAudit(getEntityDTO(), bindingResult));
+        log.info("test createAuditShouldReturnError completed successfully");
     }
 }

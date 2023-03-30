@@ -4,18 +4,19 @@ import com.bank.profile.entity.Profile;
 import com.bank.profile.exception.EntityNotFoundException;
 import com.bank.profile.repository.ProfileRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,68 +34,63 @@ class ProfileServiceImplTest {
     }
 
     @Test
-    void saveProfileShouldReturnTrueTest() {
+    void saveProfileShouldReturnTrue() {
         doReturn(getProfile()).when(profileRepository).save(getProfile());
 
         boolean b = profileServiceImpl.saveProfile(getProfile());
 
+        assertTrue(b);
         verify(profileServiceImpl).saveProfile(any(Profile.class));
-        Assertions.assertTrue(b);
         log.info("test saveProfileShouldReturnTrue completed successfully");
     }
 
     @Test
-    void findProfileByIdShouldReturnProfileTest() {
+    void findProfileByIdShouldReturnProfile() {
         doReturn(Optional.of(getProfile())).when(profileRepository).findById(anyLong());
 
         Profile profile = profileServiceImpl.findProfileById(anyLong());
 
+        assertEquals(getProfile(), profile);
         verify(profileServiceImpl).findProfileById(anyLong());
-        Assertions.assertEquals(getProfile(), profile);
         log.info("test findProfileByIdShouldReturnProfile completed successfully");
     }
 
     @Test
-    void findProfileByIdShouldReturnErrorTest() {
-        doThrow(EntityNotFoundException.class).when(profileRepository).findById(anyLong());
-
-        Assertions.assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.findProfileById(anyLong()));
-
+    void findProfileByIdShouldReturnError() {
+        assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.findProfileById(anyLong()));
         verify(profileServiceImpl).findProfileById(anyLong());
         log.info("test findProfileByIdShouldReturnError completed successfully");
     }
 
     @Test
-    void editProfileShouldReturnUpdateProfileTest() {
-        doReturn(getProfile()).when(profileRepository).save(any(Profile.class));
+    void editProfileShouldReturnUpdateProfile() {
+        doReturn(getProfile()).when(profileRepository).save(getProfile());
 
         boolean b = profileServiceImpl.editProfile(getProfile().getId(), getProfile());
 
-        Assertions.assertTrue(b);
+        assertTrue(b);
         verify(profileServiceImpl).editProfile(anyLong(), any(Profile.class));
         log.info("test editProfileShouldReturnUpdateProfile completed successfully");
     }
 
     @Test
-    void deleteProfileShouldNothingReturnTest() {
-        doNothing().when(profileRepository).deleteById(anyLong());
-
-        Assertions.assertTrue(profileServiceImpl.deleteProfile(anyLong()));
+    void deleteProfileShouldCompletedSuccessfully() {
+        assertTrue(profileServiceImpl.deleteProfile(anyLong()));
         verify(profileServiceImpl).deleteProfile(anyLong());
-        log.info("test deleteProfileShouldNothingReturn completed successfully");
+        log.info("test deleteProfileShouldCompletedSuccessfully completed successfully");
     }
 
     @Test
     void deleteProfileShouldReturnErrorTest() {
-        doThrow(EntityNotFoundException.class).when(profileRepository).deleteById(anyLong());
+        doThrow(EmptyResultDataAccessException.class).when(profileRepository).deleteById(anyLong());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.deleteProfile(anyLong()));
+        assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.deleteProfile(anyLong()));
         verify(profileServiceImpl).deleteProfile(anyLong());
         log.info("test deleteProfileShouldReturnError completed successfully");
     }
 
     @Test
-    void getAllProfileShouldReturnListTest() {
+    void getAllProfileShouldReturnList() {
         List<Profile> profiles = new ArrayList<>();
         profiles.add(mock(Profile.class));
         profiles.add(mock(Profile.class));
@@ -103,17 +99,18 @@ class ProfileServiceImplTest {
 
         List<Profile> profilesExtend = profileServiceImpl.getAllProfile();
 
-        Assertions.assertEquals(3, profilesExtend.size());
+        assertEquals(profiles.size(), profilesExtend.size());
         verify(profileServiceImpl).getAllProfile();
         log.info("test getAllProfileShouldReturnList completed successfully");
     }
 
     @Test
-    void getAllProfileShouldReturnErrorTest() {
-        doThrow(EntityNotFoundException.class).when(profileRepository).findAll();
+    void getAllProfileShouldReturnError() {
+        List<Profile> profiles = new ArrayList<>();
+        doReturn(profiles).when(profileRepository).findAll();
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.getAllProfile());
+        assertThrows(EntityNotFoundException.class, () -> profileServiceImpl.getAllProfile());
         verify(profileServiceImpl).getAllProfile();
-        log.info("test getAllProfileShouldReturnList completed successfully");
+        log.info("test getAllProfileShouldReturnError completed successfully");
     }
 }

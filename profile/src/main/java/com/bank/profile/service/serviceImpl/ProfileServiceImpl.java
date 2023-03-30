@@ -53,12 +53,11 @@ public class ProfileServiceImpl implements ProfileService {
 
         try {
             profileRepository.deleteById(profileId);
+            log.info("deleted Profile successfully: id = {}", profileId);
+            return true;
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(Profile.class.getSimpleName(), profileId, e);
         }
-
-        log.info("deleted Profile successfully: id = {}", profileId);
-        return true;
     }
 
     @Override
@@ -71,7 +70,6 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         log.info("found all Profile successfully, size = {}", allProfile.size());
-
         return allProfile;
     }
 }

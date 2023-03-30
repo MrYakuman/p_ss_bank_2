@@ -2,9 +2,9 @@ package com.bank.profile.controller;
 
 import com.bank.profile.dto.RegistrationDTO;
 import com.bank.profile.entity.Registration;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.service.serviceInterface.RegistrationService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -32,11 +33,11 @@ class RegistrationControllerTest {
 
     private Long id = 123L;
 
-    static Registration getRegistration() {
+    static Registration getEntity() {
         return new Registration();
     }
 
-    static RegistrationDTO getRegistrationDTO() {
+    static RegistrationDTO getEntityDTO() {
         return new RegistrationDTO();
     }
 
@@ -45,37 +46,46 @@ class RegistrationControllerTest {
     }
 
     @Test
-    void getAllRegistrationShouldReturnHttpStatusAndListTest() {
+    void getAllRegistrationShouldReturnHttpStatusAndList() {
         List<Registration> registrations = new ArrayList<>();
-        registrations.add(getRegistration());
-        registrations.add(getRegistration());
-        registrations.add(getRegistration());
+        registrations.add(getEntity());
+        registrations.add(getEntity());
+        registrations.add(getEntity());
         doReturn(registrations).when(service).getAllRegistration();
 
         ResponseEntity<List<RegistrationDTO>> response = controller.getAllRegistration();
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getAllRegistrationShouldReturnHttpStatusAndList completed successfully");
     }
 
     @Test
-    void getRegistrationShouldReturnHttpStatusAndRegistrationDTO_Test() {
-        doReturn(getRegistration()).when(service).findRegistrationById(anyLong());
+    void getRegistrationShouldReturnHttpStatusAndRegistrationDTO() {
+        doReturn(getEntity()).when(service).findRegistrationById(anyLong());
 
         ResponseEntity<RegistrationDTO> response = controller.getRegistration(anyLong());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getRegistrationShouldReturnHttpStatusAndRegistrationDTO completed successfully");
     }
 
     @Test
-    void editRegistrationShouldReturnHttpStatusAndRegistrationDTO_Test() {
-        ResponseEntity<RegistrationDTO> response = controller.editRegistration(id, getRegistrationDTO(), getBindingResult());
+    void editRegistrationShouldReturnHttpStatusAndRegistrationDTO() {
+        ResponseEntity<RegistrationDTO> response = controller.editRegistration(id, getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         log.info("test editRegistrationShouldReturnHttpStatusAndRegistrationDTO completed successfully");
+    }
+
+    @Test
+    void editRegistrationShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.editRegistration(id, getEntityDTO(), bindingResult));
+        log.info("test editRegistrationShouldReturnError completed successfully");
     }
 }

@@ -2,9 +2,9 @@ package com.bank.profile.controller;
 
 import com.bank.profile.dto.AccountDetailsIdDTO;
 import com.bank.profile.entity.AccountDetailsId;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.service.serviceInterface.AccountDetailsIdService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -43,7 +44,7 @@ class AccountDetailsIdControllerTest {
     }
 
     @Test
-    void getAllAccountDetailsIdShouldReturnHttpStatusAndListTest() {
+    void getAllAccountDetailsIdShouldReturnHttpStatusAndList() {
         List<AccountDetailsId> accountDetailsIds = new ArrayList<>();
         accountDetailsIds.add(getEntity());
         accountDetailsIds.add(getEntity());
@@ -52,45 +53,63 @@ class AccountDetailsIdControllerTest {
 
         ResponseEntity<List<AccountDetailsIdDTO>> response = controller.getAllAccountDetailsId();
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getAllAccountDetailsIdShouldReturnHttpStatusAndList completed successfully");
     }
 
     @Test
-    void getAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO_Test() {
+    void getAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO() {
         doReturn(getEntity()).when(service).findAccountDetailsIdById(anyLong());
 
         ResponseEntity<AccountDetailsIdDTO> response = controller.getAccountDetailsId(anyLong());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO completed successfully");
     }
 
     @Test
-    void createAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO_Test() {
+    void createAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO() {
         ResponseEntity<AccountDetailsIdDTO> response = controller.createAccountDetailsId(getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         log.info("test createAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO completed successfully");
     }
 
     @Test
-    void editAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO_Test() {
+    void createAccountDetailsIdShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.createAccountDetailsId(getEntityDTO(), bindingResult));
+        log.info("test createAccountDetailsIdShouldReturnError completed successfully");
+    }
+
+    @Test
+    void editAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO() {
         ResponseEntity<AccountDetailsIdDTO> response = controller.editAccountDetailsId(id, getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         log.info("test editAccountDetailsIdShouldReturnHttpStatusAndActualAccountDetailsIdDTO completed successfully");
     }
 
     @Test
-    void deleteAccountDetailsIdShouldReturnHttpStatusTest() {
+    void editAccountDetailsIdShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.editAccountDetailsId(id, getEntityDTO(), bindingResult));
+        log.info("test editAccountDetailsIdShouldReturnError completed successfully");
+    }
+
+    @Test
+    void deleteAccountDetailsIdShouldReturnHttpStatus() {
         ResponseEntity<HttpStatus> response = controller.deleteAccountDetailsId(anyLong());
 
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         log.info("test deleteAccountDetailsIdShouldReturnHttpStatus completed successfully");
     }
 }

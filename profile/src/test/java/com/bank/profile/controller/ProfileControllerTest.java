@@ -2,13 +2,13 @@ package com.bank.profile.controller;
 
 import com.bank.profile.dto.ProfileDTO;
 import com.bank.profile.entity.Profile;
+import com.bank.profile.exception.ArgumentNotValidException;
 import com.bank.profile.mappers.ProfileMapper;
 import com.bank.profile.service.serviceInterface.AuditService;
 import com.bank.profile.service.serviceInterface.ProfileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +54,7 @@ class ProfileControllerTest {
     }
 
     @Test
-    void getAllProfileShouldReturnHttpStatusAndListTest() {
+    void getAllProfileShouldReturnHttpStatusAndList() {
         List<Profile> profiles = new ArrayList<>();
         profiles.add(getEntity());
         profiles.add(getEntity());
@@ -62,52 +63,72 @@ class ProfileControllerTest {
 
         ResponseEntity<List<ProfileDTO>> response = controller.getAllProfile();
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getAllProfileShouldReturnHttpStatusAndList completed successfully");
     }
 
     @Test
-    void getProfileShouldReturnHttpStatusAndProfileDTO_Test() {
+    void getProfileShouldReturnHttpStatusAndProfileDTO() {
         doReturn(getEntity()).when(service).findProfileById(anyLong());
 
         ResponseEntity<ProfileDTO> response = controller.getProfile(anyLong());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
         log.info("test getProfileShouldReturnHttpStatusAndProfileDTO completed successfully");
     }
 
     @SneakyThrows
     @Test
-    void createProfileShouldReturnHttpStatusAndProfileDTO_Test() {
+    void createProfileShouldReturnHttpStatusAndProfileDTO() {
         doReturn("String").when(objectMapper).writeValueAsString(getEntity());
 
         ResponseEntity<ProfileDTO> response = controller.createProfile(getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         log.info("test createProfileShouldReturnHttpStatusAndProfileDTO completed successfully");
     }
 
     @SneakyThrows
     @Test
-    void editProfileShouldReturnHttpStatusAndProfileDTO_Test() {
+    void createProfileShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.createProfile(getEntityDTO(), bindingResult));
+        log.info("test createProfileShouldReturnError completed successfully");
+    }
+
+    @SneakyThrows
+    @Test
+    void editProfileShouldReturnHttpStatusAndProfileDTO() {
         doReturn("String").when(objectMapper).writeValueAsString(getEntity());
         doReturn(getEntity()).when(service).findProfileById(anyLong());
 
         ResponseEntity<ProfileDTO> response = controller.editProfile(id, getEntityDTO(), getBindingResult());
 
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         log.info("test editProfileShouldReturnHttpStatusAndProfileDTO completed successfully");
     }
 
+    @SneakyThrows
     @Test
-    void deleteProfileShouldReturnHttpStatusTest() {
+    void editProfileShouldReturnError() {
+        BindingResult bindingResult = getBindingResult();
+        doReturn(true).when(bindingResult).hasErrors();
+
+        assertThrows(ArgumentNotValidException.class, () -> controller.editProfile(id, getEntityDTO(), bindingResult));
+        log.info("test editProfileShouldReturnError completed successfully");
+    }
+
+    @Test
+    void deleteProfileShouldReturnHttpStatus() {
         ResponseEntity<HttpStatus> response = controller.deleteProfile(anyLong());
 
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         log.info("test deleteProfileShouldReturnHttpStatus completed successfully");
     }
 }

@@ -49,6 +49,7 @@ public class ActualRegistrationServiceImpl implements ActualRegistrationService 
     @Override
     public boolean deleteActualRegistration(long actualRegistrationId) {
         log.info("attempt to delete ActualRegistration: {}", actualRegistrationId);
+
         try {
             actualRegistrationRepository.deleteById(actualRegistrationId);
             log.info("deleted ActualRegistration successfully: id = {}", actualRegistrationId);
