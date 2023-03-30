@@ -55,7 +55,7 @@
             <column autoIncrement="true" name="id" remarks="технический идентификатор" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="suspicious_card_transfer_pkey"/>
             </column>
-            <column name="card_transfer_id" remarks="технический идентификатор на перевод по номеру телефона" type="BIGINT">
+            <column name="card_transfer_id" remarks="технический идентификатор на перевод по номеру карты" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="is_blocked" remarks="заблокировано ли" type="BOOLEAN">
