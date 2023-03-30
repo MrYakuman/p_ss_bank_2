@@ -26,18 +26,18 @@ public class ArgumentNotValidExceptionHandler extends ResponseEntityExceptionHan
         this.objectMapper = objectMapper;
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<String> handlerArgumentNotValid(ArgumentNotValidException e) throws JsonProcessingException {
-//        Map<String, String> errorMap = new HashMap<>();
-//
-//        e.getBindingResult().getFieldErrors().forEach(error -> {
-//            errorMap.put(error.getField(), error.getDefaultMessage());
-//        });
-//
-//        errorMap.forEach((k, v) -> log.error(k + ": " + v));
-//
-//        return new ResponseEntity<>(objectMapper.writeValueAsString(errorMap), HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler
+    public ResponseEntity<String> handlerArgumentNotValid(ArgumentNotValidException e) throws JsonProcessingException {
+        Map<String, String> errorMap = new HashMap<>();
+
+        e.getBindingResult().getFieldErrors().forEach(error -> {
+            errorMap.put(error.getField(), error.getDefaultMessage());
+        });
+
+        errorMap.forEach((k, v) -> log.error(k + ": " + v));
+
+        return new ResponseEntity<>(objectMapper.writeValueAsString(errorMap), HttpStatus.BAD_REQUEST);
+    }
 
 
 }
