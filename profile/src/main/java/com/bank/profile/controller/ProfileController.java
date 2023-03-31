@@ -10,6 +10,7 @@ import com.bank.profile.service.serviceInterface.AuditService;
 import com.bank.profile.service.serviceInterface.ProfileService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RestController
 @Slf4j
@@ -39,6 +41,7 @@ public class ProfileController {
         this.objectMapper = objectMapper;
     }
 
+    @Timed("gettingAllProfiles")
     @GetMapping("/")
     @Operation(
             summary = "Получение всех объектов Profile в формате ProfileDTO.",
@@ -56,6 +59,7 @@ public class ProfileController {
         return new ResponseEntity<>(allProfileDTO, HttpStatus.FOUND);
     }
 
+    @Timed
     @GetMapping("/{id}")
     @Operation(
             summary = "Получение конкретного объекта Profile в формате ProfileDTO, через его id.",
@@ -69,7 +73,7 @@ public class ProfileController {
         return new ResponseEntity<>(profileDTO, HttpStatus.FOUND);
     }
 
-
+    @Timed
     @PostMapping("/")
     @Operation(
             summary = "Сохранение в бд нового объекта Profile.",
@@ -97,6 +101,7 @@ public class ProfileController {
         return new ResponseEntity<>(profileDTO, HttpStatus.CREATED);
     }
 
+    @Timed
     @PutMapping("/{id}")
     @Operation(
             summary = "Обновление существующего объекта Profile.",
@@ -135,6 +140,7 @@ public class ProfileController {
         return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 
+    @Timed
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаление существующего объекта Profile.",

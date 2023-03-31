@@ -17,3 +17,4 @@ Swagger UI: http://localhost:8089/api/profile/swagger-ui/index.html
 
 Swagger OpenAPI .json: http://localhost:8089/api/profile/v3/api-docs
 
+Actuator: http://localhost:8189/actuator
